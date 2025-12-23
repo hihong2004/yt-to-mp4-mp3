@@ -1,10 +1,10 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { URLInput } from './components/URLInput';
 import { VideoPreview } from './components/VideoPreview';
 import { DownloadGrid } from './components/DownloadGrid';
-import { VideoMetadata, DownloadFormat } from './types';
+import { VideoMetadata } from './types';
 import { getVideoSummary } from './services/geminiService';
 
 const App: React.FC = () => {
@@ -30,13 +30,11 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      // In a real app, we'd fetch this from a proxy or API. 
-      // Here we simulate the metadata fetch and use Gemini for insights.
       const summary = await getVideoSummary(url);
       
       setVideoData({
         id,
-        title: "獲取中的影片內容...", // Simplified as real title requires backend/Yt-API
+        title: "YouTube 影片解析完成",
         thumbnailUrl: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
         author: "YouTube Creator",
         duration: "00:00",
@@ -50,43 +48,43 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
+    <div className="relative min-h-screen bg-black text-gray-100">
+      <div className="max-w-4xl mx-auto px-6 py-12 md:py-24">
         <Header />
         
         <main className="space-y-12">
           <URLInput onExtract={handleUrlSubmit} loading={loading} />
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-center">
+            <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-6 py-4 rounded-2xl text-center animate-pulse">
               {error}
             </div>
           )}
 
           {videoData && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+            <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-12">
               <VideoPreview metadata={videoData} />
               <DownloadGrid videoId={videoData.id} />
             </div>
           )}
 
           {!videoData && !loading && !error && (
-            <div className="text-center text-gray-500 py-20">
-              <div className="mb-4 text-4xl">🚀</div>
-              <p>輸入網址即可開始解析與下載</p>
+            <div className="text-center text-gray-600 py-32 opacity-50">
+              <div className="text-6xl mb-6">🎞️</div>
+              <p className="text-xl font-light">輸入網址，開啟 TubeFlow 極致體驗</p>
             </div>
           )}
         </main>
 
-        <footer className="mt-20 pt-8 border-t border-white/5 text-center text-gray-600 text-sm">
-          <p>&copy; 2024 TubeFlow. 純前端展示版本 - 整合 Gemini AI 解析</p>
+        <footer className="mt-32 pt-10 border-t border-white/5 text-center text-gray-700 text-xs tracking-widest uppercase">
+          <p>&copy; 2024 TubeFlow Studio. Built with Gemini AI Intelligence</p>
         </footer>
       </div>
 
-      {/* Author Attribution in bottom right */}
-      <div className="fixed bottom-4 right-4 z-50 pointer-events-none">
-        <div className="glass px-3 py-1.5 rounded-full border border-white/10 shadow-lg">
-          <span className="text-xs text-gray-400 font-medium">作者：picachu huang</span>
+      {/* Author Attribution */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="glass px-4 py-2 rounded-full border border-white/10 shadow-2xl">
+          <span className="text-xs text-gray-400 font-semibold tracking-wide">作者：picachu huang</span>
         </div>
       </div>
     </div>

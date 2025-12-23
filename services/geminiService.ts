@@ -3,8 +3,9 @@ import { GoogleGenAI } from "@google/genai";
 
 export async function getVideoSummary(videoUrl: string): Promise<string> {
   try {
-    // 每次調用時初始化以確保獲取最新的 API Key
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    // 安全地獲取 API KEY，避免 process is not defined 錯誤
+    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+    const ai = new GoogleGenAI({ apiKey: apiKey || '' });
     
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
