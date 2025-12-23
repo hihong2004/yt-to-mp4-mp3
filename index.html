@@ -23,11 +23,14 @@
       backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
     }
+    @keyframes progress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .animate-progress {
+      animation: progress 2s ease-in-out forwards;
+    }
   </style>
-  <script>
-    // 預防瀏覽器環境下直接存取 process 導致的 ReferenceError
-    window.process = { env: { API_KEY: "" } };
-  </script>
   <script type="importmap">
 {
   "imports": {

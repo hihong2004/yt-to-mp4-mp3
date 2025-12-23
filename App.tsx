@@ -30,58 +30,64 @@ const App: React.FC = () => {
     setError(null);
 
     try {
-      const summary = await getVideoSummary(url);
+      const summaryResult = await getVideoSummary(url);
       
       setVideoData({
         id,
-        title: "YouTube 影片解析完成",
+        title: "影片資訊解析完成",
         thumbnailUrl: `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
         author: "YouTube Creator",
         duration: "00:00",
-        aiSummary: summary
+        aiSummary: summaryResult.text,
+        sources: summaryResult.sources
       });
     } catch (err) {
-      setError("無法解析此網址，請稍後再試。");
+      setError("解析過程發生錯誤，請稍後再試。");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-gray-100">
-      <div className="max-w-4xl mx-auto px-6 py-12 md:py-24">
+    <div className="relative min-h-screen bg-black text-gray-100 pb-20">
+      <div className="max-w-4xl mx-auto px-6 py-12 md:py-20">
         <Header />
         
         <main className="space-y-12">
           <URLInput onExtract={handleUrlSubmit} loading={loading} />
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-6 py-4 rounded-2xl text-center animate-pulse">
+            <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-6 py-4 rounded-2xl text-center">
               {error}
             </div>
           )}
 
           {videoData && (
-            <div className="animate-in fade-in slide-in-from-bottom-8 duration-1000 space-y-12">
+            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 space-y-12">
               <VideoPreview metadata={videoData} />
-              <DownloadGrid videoId={videoData.id} />
+              <div className="pt-4">
+                <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-red-500 rounded-full"></span>
+                  下載選項
+                </h3>
+                <DownloadGrid videoId={videoData.id} />
+              </div>
             </div>
           )}
 
           {!videoData && !loading && !error && (
-            <div className="text-center text-gray-600 py-32 opacity-50">
-              <div className="text-6xl mb-6">🎞️</div>
-              <p className="text-xl font-light">輸入網址，開啟 TubeFlow 極致體驗</p>
+            <div className="text-center text-gray-600 py-32 opacity-40">
+              <div className="text-6xl mb-6">🔗</div>
+              <p className="text-xl">請輸入 YouTube 網址開始體驗</p>
             </div>
           )}
         </main>
 
-        <footer className="mt-32 pt-10 border-t border-white/5 text-center text-gray-700 text-xs tracking-widest uppercase">
-          <p>&copy; 2024 TubeFlow Studio. Built with Gemini AI Intelligence</p>
+        <footer className="mt-20 pt-10 border-t border-white/5 text-center text-gray-700 text-xs">
+          <p>&copy; 2024 TubeFlow Studio. AI Powered Metadata Extraction.</p>
         </footer>
       </div>
 
-      {/* Author Attribution */}
       <div className="fixed bottom-6 right-6 z-50">
         <div className="glass px-4 py-2 rounded-full border border-white/10 shadow-2xl">
           <span className="text-xs text-gray-400 font-semibold tracking-wide">作者：picachu huang</span>

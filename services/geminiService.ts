@@ -1,23 +1,38 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-export async function getVideoSummary(videoUrl: string): Promise<string> {
+export interface SummaryResult {
+  text: string;
+  sources: { title: string; uri: string }[];
+}
+
+export async function getVideoSummary(videoUrl: string): Promise<SummaryResult> {
   try {
-    // 安全地獲取 API KEY，避免 process is not defined 錯誤
-    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
-    const ai = new GoogleGenAI({ apiKey: apiKey || '' });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
     
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `這是一個 YouTube 網址：${videoUrl}。請根據這個網址（如果能獲取資訊）或這類網址常見的內容，用繁體中文提供一個簡短的一句話介紹，說明這支影片可能在講什麼。`,
+      contents: `這是一個 YouTube 網址：${videoUrl}。請根據這個網址內容（使用搜尋工具獲取），用繁體中文提供一個約 50 字的精彩介紹。`,
       config: {
         temperature: 0.7,
         tools: [{ googleSearch: {} }]
       }
     });
-    return response.text || "無法獲取影片摘要。";
+
+    const text = response.text || "無法獲取影片摘要。";
+    const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks
+      ?.map((chunk: any) => ({
+        title: chunk.web?.title || '參考來源',
+        uri: chunk.web?.uri || ''
+      }))
+      .filter((s: any) => s.uri) || [];
+
+    return { text, sources };
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "AI 暫時無法分析此連結。";
+    return { 
+      text: "AI 暫時無法分析此連結，請確認網址是否正確或稍後再試。", 
+      sources: [] 
+    };
   }
 }

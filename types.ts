@@ -1,4 +1,9 @@
 
+export interface VideoSource {
+  title: string;
+  uri: string;
+}
+
 export interface VideoMetadata {
   id: string;
   title: string;
@@ -6,6 +11,7 @@ export interface VideoMetadata {
   author: string;
   duration: string;
   aiSummary?: string;
+  sources?: VideoSource[];
 }
 
 export enum DownloadFormat {
@@ -17,12 +23,4 @@ export interface QualityOption {
   label: string;
   size: string;
   quality: string;
-}
-
-export interface DownloadTask {
-  id: string;
-  label: string;
-  format: DownloadFormat;
-  progress: number;
-  status: 'pending' | 'downloading' | 'completed';
 }
