@@ -50,36 +50,45 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
-      <Header />
-      
-      <main className="space-y-12">
-        <URLInput onExtract={handleUrlSubmit} loading={loading} />
+    <div className="relative min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
+        <Header />
+        
+        <main className="space-y-12">
+          <URLInput onExtract={handleUrlSubmit} loading={loading} />
 
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-center">
-            {error}
-          </div>
-        )}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl text-center">
+              {error}
+            </div>
+          )}
 
-        {videoData && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
-            <VideoPreview metadata={videoData} />
-            <DownloadGrid videoId={videoData.id} />
-          </div>
-        )}
+          {videoData && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-8">
+              <VideoPreview metadata={videoData} />
+              <DownloadGrid videoId={videoData.id} />
+            </div>
+          )}
 
-        {!videoData && !loading && !error && (
-          <div className="text-center text-gray-500 py-20">
-            <div className="mb-4 text-4xl">🚀</div>
-            <p>輸入網址即可開始解析與下載</p>
-          </div>
-        )}
-      </main>
+          {!videoData && !loading && !error && (
+            <div className="text-center text-gray-500 py-20">
+              <div className="mb-4 text-4xl">🚀</div>
+              <p>輸入網址即可開始解析與下載</p>
+            </div>
+          )}
+        </main>
 
-      <footer className="mt-20 pt-8 border-t border-white/5 text-center text-gray-600 text-sm">
-        <p>&copy; 2024 TubeFlow. 純前端展示版本 - 整合 Gemini AI 解析</p>
-      </footer>
+        <footer className="mt-20 pt-8 border-t border-white/5 text-center text-gray-600 text-sm">
+          <p>&copy; 2024 TubeFlow. 純前端展示版本 - 整合 Gemini AI 解析</p>
+        </footer>
+      </div>
+
+      {/* Author Attribution in bottom right */}
+      <div className="fixed bottom-4 right-4 z-50 pointer-events-none">
+        <div className="glass px-3 py-1.5 rounded-full border border-white/10 shadow-lg">
+          <span className="text-xs text-gray-400 font-medium">作者：picachu huang</span>
+        </div>
+      </div>
     </div>
   );
 };
