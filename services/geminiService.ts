@@ -1,10 +1,11 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export async function getVideoSummary(videoUrl: string): Promise<string> {
   try {
+    // 每次調用時初始化以確保獲取最新的 API Key
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `這是一個 YouTube 網址：${videoUrl}。請根據這個網址（如果能獲取資訊）或這類網址常見的內容，用繁體中文提供一個簡短的一句話介紹，說明這支影片可能在講什麼。`,
